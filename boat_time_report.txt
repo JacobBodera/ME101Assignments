@@ -1,0 +1,2 @@
+The shortest time it took to complete the race was 308 minutes.
+The longest time it took to complete the race was 961 minutes.
