@@ -1,1 +1,0 @@
-numStudents + 1
