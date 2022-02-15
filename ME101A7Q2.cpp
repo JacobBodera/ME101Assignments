@@ -32,7 +32,7 @@ double quad_area (double s1, double s2, double diag, double s3, double s4)
 double total_cost (bool isFenced, double area, double perim)
 {
     if (isFenced)
-        return ((area*PAVE_COST) + (perim*FENCE_COST) + GATE_COST + ADMIN_FEE) * HST;
+        return ((ceil(area)*PAVE_COST) + (ceil(perim)*FENCE_COST) + GATE_COST + ADMIN_FEE) * HST;
     return ((area*PAVE_COST) + ADMIN_FEE) * HST;
 }
 
@@ -57,13 +57,34 @@ int main()
     while (fin >> jobNum >> isFenced >> shape)
     {
         double s1 = 0, s2 = 0, s3 = 0, s4 = 0, diag = 0;
-        double area = 0, paveCost = 0, length = 0, fenceCost = 0, taxes = 0, totalCost = 0;
+        double area = 0, paveCost = 0, perimeter = 0, fenceCost = 0, taxes = 0, totalCost = 0;
 
         if (shape == "tri")
+        {
             fin >> s1 >> s2 >> s3;
+            area = tri_area(s1, s2, s3);
+            if (isFenced)    
+                perimeter = tri_perim(s1, s2, s3);
+        }
         else
+        {
             fin >> s1 >> s2 >> diag >> s3 >> s4;
-        
+            area = quad_area(s1, s2, diag, s3, s4);
+            if (isFenced)
+                perimeter = quad_perim(s1, s2, s3, s4);
+        }
 
+        paveCost = ceil(area) * PAVE_COST;
+        fenceCost = ceil(perimeter) * FENCE_COST + GATE_COST;
+        totalCost = total_cost(isFenced, area, perimeter);
+        taxes = (totalCost/HST) * (HST - 1);
+
+        fout << fixed << setprecision(0) << jobNum << setw(7) << isFenced << setw(13) << setprecision(2) <<  area << setw(14) << paveCost 
+             << setw(12) << perimeter << setw(14) << fenceCost << setw(11) << taxes << setw(11) << totalCost << endl;
     }
+
+    fin.close();
+    fout.close();
+
+    return EXIT_SUCCESS;
 }
